@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Color {
+  id             String   @id @default(cuid())
+  name           String
+  sku            String?
+  brand          String?
+  collection     String?
+  tone           String?
+  wearClass      Int?
+  thicknessMm    Int?
+  plankSize      String?
+  bevelType      String?
+  waterResistant Boolean  @default(false)
+  surfaceType    String?
+  pricePerM2     Float?
+  inStock        Boolean  @default(true)
+  imagesJson     String   @default("[]") // JSON array of strings (paths or urls)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([name])
+  @@index([brand])
+  @@index([collection])
+  @@index([tone])
+}
