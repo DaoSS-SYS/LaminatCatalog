@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { parseImages } from "@/lib/normalize";
@@ -5,6 +8,7 @@ import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
+
 
 const QuerySchema = z.object({
   q: z.string().optional(),
