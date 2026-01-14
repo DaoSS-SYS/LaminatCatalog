@@ -7,7 +7,6 @@ import { parseImages } from "@/lib/normalize";
 import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 
-export const dynamic = "force-dynamic";
 
 
 const QuerySchema = z.object({
