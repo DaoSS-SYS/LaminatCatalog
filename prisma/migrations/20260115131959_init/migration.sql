@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Color" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "sku" TEXT,
     "brand" TEXT,
@@ -12,11 +12,13 @@ CREATE TABLE "Color" (
     "bevelType" TEXT,
     "waterResistant" BOOLEAN NOT NULL DEFAULT false,
     "surfaceType" TEXT,
-    "pricePerM2" REAL,
+    "pricePerM2" DOUBLE PRECISION,
     "inStock" BOOLEAN NOT NULL DEFAULT true,
     "imagesJson" TEXT NOT NULL DEFAULT '[]',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Color_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
