@@ -57,14 +57,15 @@ export default function Contacts() {
           </div>
 
           {/* Яндекс карта */}
-          <div className="card overflow-hidden">
-            <iframe
-              title="yandex-map"
-              className="h-[360px] w-full"
-              src="https://yandex.ru/map-widget/v1/?um=constructor%3A4ada1d5dd407ce0a33091e8e7244997c3784848fb468684d9ab5006fb737389b&amp;source=constructor"
-              frameBorder={0}
+          <div className="card overflow-hidden flex">
+           <iframe
+            title="yandex-map"
+            className="w-full h-full"
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3A4ada1d5dd407ce0a33091e8e7244997c3784848fb468684d9ab5006fb737389b&amp;source=constructor"
+            frameBorder={0}
             />
           </div>
+
         </div>
       </main>
     </div>
