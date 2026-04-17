@@ -7,7 +7,7 @@ export function Header() {
     <header className="border-b border-zinc-200 bg-white/70 backdrop-blur">
       <div className="container-page flex h-14 items-center justify-between">
         <Link href="/" className="font-semibold tracking-tight">
-          Laminat<span className="text-zinc-500">Catalog</span>
+          Laminat<span className="text-zinc-500">Catalog - ООО «СОЮЗТОРГ-М»</span>
         </Link>
         <nav className="flex items-center gap-2">
           <Link className="btn" href="/contacts">Контакты</Link>
