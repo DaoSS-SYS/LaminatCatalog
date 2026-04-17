@@ -12,6 +12,7 @@ generator client {
 model Color {
   id             String   @id @default(cuid())
   name           String
+  productType    String   @default("laminat")
   sku            String?
   brand          String?
   collection     String?
@@ -24,12 +25,10 @@ model Color {
   surfaceType    String?
   pricePerM2     Float?
   inStock        Boolean  @default(true)
-  imagesJson     String   @default("[]") // JSON array of strings (paths or urls)
+  imagesJson     String   @default("[]")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  @@index([name])
-  @@index([brand])
-  @@index([collection])
+  @@index([productType])
   @@index([tone])
 }

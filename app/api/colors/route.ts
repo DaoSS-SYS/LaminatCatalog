@@ -8,13 +8,13 @@ import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 
 /**
- * GET /api/colors?q=&tone=&take=&skip=
+ * GET /api/colors?q=&tone=&productType=&take=&skip=
  * Возвращает список карточек для каталога.
- * Оставили только поиск и оттенок.
  */
 const QuerySchema = z.object({
   q: z.string().optional(),
   tone: z.string().optional(),
+  productType: z.enum(["laminat", "quartzvinyl"]).optional(),
   take: z.coerce.number().optional(),
   skip: z.coerce.number().optional(),
 });
@@ -22,9 +22,12 @@ const QuerySchema = z.object({
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const parsed = QuerySchema.safeParse(Object.fromEntries(url.searchParams.entries()));
-  if (!parsed.success) return Response.json({ error: "Bad query" }, { status: 400 });
 
-  const { q, tone, take, skip } = parsed.data;
+  if (!parsed.success) {
+    return Response.json({ error: "Bad query" }, { status: 400 });
+  }
+
+  const { q, tone, productType, take, skip } = parsed.data;
 
   const where: any = {};
 
@@ -36,10 +39,18 @@ export async function GET(req: NextRequest) {
     const cap = lower.length ? lower[0].toUpperCase() + lower.slice(1) : lower;
     const variants = Array.from(new Set([qRaw, lower, upper, cap])).filter(Boolean);
 
-    where.OR = variants.map((v) => ({ name: { contains: v } }));
+    where.OR = variants.map((v) => ({
+      name: { contains: v },
+    }));
   }
 
-  if (tone) where.tone = tone;
+  if (tone) {
+    where.tone = tone;
+  }
+
+  if (productType) {
+    where.productType = productType;
+  }
 
   try {
     const [items, total] = await Promise.all([
@@ -57,6 +68,7 @@ export async function GET(req: NextRequest) {
       items: items.map((c) => ({
         id: c.id,
         name: c.name,
+        productType: c.productType,
         tone: c.tone,
         images: parseImages(c.imagesJson),
         createdAt: c.createdAt.toISOString(),
@@ -65,6 +77,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (e) {
     console.error("GET /api/colors error:", e);
+
     // Всегда JSON, чтобы фронт не падал на r.json()
     return Response.json(
       { total: 0, items: [], error: "Database error" },
@@ -75,11 +88,12 @@ export async function GET(req: NextRequest) {
 
 /**
  * POST /api/colors
- * Тело: { name: string, tone?: string, images?: string[] }
- * Создает запись цвета.
+ * Тело: { name: string, productType?: "laminat" | "quartzvinyl", tone?: string, images?: string[] }
+ * Создает запись товара.
  */
 const CreateSchema = z.object({
   name: z.string().min(1),
+  productType: z.enum(["laminat", "quartzvinyl"]).default("laminat"),
   tone: z.string().optional().nullable(),
   images: z.array(z.string()).optional().default([]),
 });
@@ -104,6 +118,7 @@ export async function POST(req: NextRequest) {
     const created = await prisma.color.create({
       data: {
         name: d.name,
+        productType: d.productType,
         tone: d.tone ?? null,
         imagesJson: JSON.stringify(d.images ?? []),
       },
